@@ -12,7 +12,19 @@ var products = [
 
 //2. Create an object "spinner" that exhibits the following behavior:
 
-var spinner = //fill in the blanks;
+var spinner = (function(){
+    var count = 0;
+    function increment(){
+        return ++count;
+    }
+    function decrement(){
+        return --count;
+    }
+    return {
+        up : increment,
+        down : decrement
+    }
+})();
 spinner.up() // => 1
 spinner.up() // => 2
 spinner.up() // => 3
@@ -23,6 +35,7 @@ spinner.down() // => 2
 spinner.down() // => 1
 spinner.down() // => 0
 
+
 //3. Given the following
 
 var emp1 = {
@@ -32,6 +45,7 @@ var emp1 = {
 function whoAmI(){
     console.log("I am ", this.name);
 }
+
 
 //what does it take to exhibit the following behavior
 whoAmI() //=> "I am Magesh"
