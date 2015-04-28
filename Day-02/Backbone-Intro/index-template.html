@@ -21,10 +21,27 @@
         }
     </style>
     <script src="jquery-1.11.2.js"></script>
+    <script src="underscore.js"></script>
+    <script src="backbone.js"></script>
     <script src="handlebars-v3.0.1.js"></script>
     <script>
         //Model
-        function SalaryCalculator(){
+        var SalaryCalculator = Backbone.Model.extend({
+            defaults : {
+                basic : 0,
+                hra : 0,
+                da : 0,
+                tax : 0,
+                salary : 0
+            },
+            calculate : function(){
+                var gross = this.get('basic') + this.get('hra') + this.get('da');
+                var net = gross * ((100-this.get('tax'))/100);
+                this.set('salary',net);
+
+            }
+        });
+     /*   function SalaryCalculator(){
             var _data = {
             };
             this.get = function(attrName){
@@ -63,20 +80,45 @@
             var net = gross * ((100-this.get('tax'))/100);
             this.set('salary',net);
 
-        }
+        }*/
 
         //View
-        function SalaryCalculatorView(calculator){
+        var SalaryCalculatorView = Backbone.View.extend({
+            initialize : function(){
+                this.listenTo(this.model, "change", this.render);
+            },
+            events : {
+                "change input" : "updateModel",
+                "click #btnCalculate" : "triggerCalculate"
+            },
+            updateModel : function(){
+                this.model.set({
+                    basic : parseInt(this.$("#txtBasic").val(),10),
+                    hra : parseInt(this.$("#txtHra").val(),10),
+                    da : parseInt(this.$("#txtDa").val(),10),
+                    tax : parseInt(this.$("#rangeTax").val(),10),
+                });
+            },
+            triggerCalculate : function(){
+                this.model.calculate();
+            },
+            render : function(){
+                var templateHTML = $("#calculatorTemplate").html();
+                var templateFn = Handlebars.compile(templateHTML);
+                this.$el.html(templateFn(this.model.toJSON()));
+            }
+        });
+      /*  function SalaryCalculatorView(calculator){
 
             var $root = this.$root = $("<div></div>");
             window.currentNode = null;
             this.initialize = function(){
 
-               /* $root.on("change", "*", function(evtArg){
+                $root.on("change", "*", function(evtArg){
                     console.log("this [in change event] =", this, evtArg);
 
                     evtArg.stopPropagation();
-                });*/
+                });
 
                 $root.on("focus", "*", function(evtArg){
                     console.log("this [in focus event] =", this, evtArg);
@@ -149,14 +191,14 @@
                 $(currentNode).focus();
             }
 
-        }
+        } */
 
         $(function(){
             window.calculator = new SalaryCalculator()
-            var view1 = new SalaryCalculatorView(calculator);
+            var view1 = new SalaryCalculatorView({model : calculator});
             view1.initialize();
             view1.render();
-            view1.$root.appendTo(document.body);
+            view1.$el.appendTo(document.body);
         });
 
     </script>
@@ -189,5 +231,10 @@
     <h1>Salary Calculator</h1>
     <!-- view1 -->
 
+    <div>
+        <input type="text" name="" id="txtBasic">
+    </div>
 
 </html>
+
+
