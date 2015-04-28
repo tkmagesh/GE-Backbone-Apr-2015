@@ -29,21 +29,21 @@
             this.set = function(attrName, value){
                 _data[attrName] = value;
                 //trigger change notification for [attrName]
-                if (typeof _events[attrName] === "function"){
-                    var listenerFn = _events[attrName];
-                    listenerFn();
-                }
+                var eventListeners = _events[attrName];
+                eventListeners.forEach(function(listenerFn){
+                    setTimeout(listenerFn);
+                });
             }
 
             var _events = {
-                basic : null,
-                hra : null,
-                da : null,
-                tax : null,
-                salary : null
+                basic : [],
+                hra : [],
+                da : [],
+                tax : [],
+                salary : []
             };
             this.addChangeListener = function(attrName, listenerFn){
-                _events[attrName] = listenerFn;
+                _events[attrName].push( listenerFn );
             };
             this.removeChangeListener = function(attrName, listenerFn){
                 //fill in the blanks - home work
@@ -64,6 +64,24 @@
                 $("#divResult").html(calculator.get('salary'));
             });
 
+             calculator.addChangeListener('basic', function(){
+                $("#txtBasic").val(calculator.get('basic'));
+            });
+
+            calculator.addChangeListener('hra', function(){
+                $("#txtHra").val(calculator.get('hra'));
+            });
+
+            calculator.addChangeListener('da', function(){
+                $("#txtDa").val(calculator.get('da'));
+            });
+
+            calculator.addChangeListener('tax', function(){
+                var tax = calculator.get('tax');
+                $("#rangeTax").val(tax);
+                $("#spanTax").html(tax);
+            });
+
 
             $("#txtBasic").change(function(){
                 calculator.set('basic', parseInt($("#txtBasic").val(),10));
@@ -81,9 +99,7 @@
             $("#btnCalculate").click(function(){
                 calculator.calculate();
             });
-            $("#rangeTax").change(function(){
-                $("#spanTax").html(this.value);
-            });
+
         });
 
     </script>
