@@ -1,0 +1,34 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Pen",
+      "cost": 10,
+      "description": "A writing device"
+    },
+    {
+      "id": 2,
+      "name": "Pencil",
+      "cost": 20,
+      "description": "Another writing device"
+    },
+    {
+      "id": 3,
+      "name": "Marker",
+      "cost": 50,
+      "description": "A writing device for the white board"
+    },
+    {
+      "id": 4,
+      "name": "Scribble Pad",
+      "cost": 25,
+      "description": "A classical one"
+    },
+    {
+      "name": "Mouse",
+      "cost": 500,
+      "description": "A computer peripheral",
+      "id": 5
+    }
+  ]
+}
